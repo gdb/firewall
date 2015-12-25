@@ -96,8 +96,12 @@ class Chef
           ufw_rule!(cmd)
         end
 
-        # ensure it's enabled _after_ rules are inputted, to catch malformed rules
-        ufw_enable! unless ufw_active?
+        new_resource.updated_by_last_action(true)
+      end
+
+      # ensure it's enabled _after_ rules are inputted, to catch malformed rules
+      if !ufw_active?
+        ufw_enable!
         new_resource.updated_by_last_action(true)
       end
     end
